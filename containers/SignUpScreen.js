@@ -7,7 +7,6 @@ import {
   TouchableHighlight,
   Image,
   ActivityIndicator,
-  Button,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -37,25 +36,31 @@ export default function SignInScreen({ setToken }) {
 
   const requestServer = async () => {
     try {
-      if (email && password) {
-        setErrorRequest("");
-        setRequestLoading(true);
+      if (email && password && username && description && secondPassword) {
+        if (password === secondPassword) {
+          setErrorRequest("");
+          setRequestLoading(true);
 
-        const data = {
-          email: email,
-          password: password,
-        };
+          const data = {
+            email: email,
+            username: username,
+            description: description,
+            password: password,
+          };
 
-        const response = await axios.post(
-          "https://express-airbnb-api.herokuapp.com/user/log_in",
-          data
-        );
+          const response = await axios.post(
+            "https://express-airbnb-api.herokuapp.com/user/sign_up",
+            data
+          );
 
-        if (response.status === 200) {
-          setRequestLoading(null);
-          setToken(response.data.token);
+          if (response.status === 200) {
+            setRequestLoading(null);
+            setToken(response.data.token);
+          } else {
+            setErrorRequest("Email or password is not correct");
+          }
         } else {
-          setErrorRequest("Email or password is not correct");
+          setErrorRequest("Your passwords are not the same.");
         }
       } else {
         setErrorRequest("We need more element to connect you.");
@@ -94,12 +99,14 @@ export default function SignInScreen({ setToken }) {
               placeholder="Email"
               style={styles.inputText}
               onChangeText={(text) => setEmail(text)}
+              value={email}
             />
 
             <TextInput
               placeholder="Username"
               style={[styles.inputText, styles.inputText__margin]}
               onChangeText={(text) => setUsername(text)}
+              value={username}
             />
 
             <TextInput
@@ -108,6 +115,7 @@ export default function SignInScreen({ setToken }) {
               numberOfLines={4}
               style={[styles.inputText__area]}
               onChangeText={(text) => setDescription(text)}
+              value={description}
             />
 
             <TextInput
@@ -115,6 +123,7 @@ export default function SignInScreen({ setToken }) {
               secureTextEntry={true}
               style={[styles.inputText, styles.inputText__margin]}
               onChangeText={(text) => setPassword(text)}
+              value={password}
             />
 
             <TextInput
@@ -122,6 +131,7 @@ export default function SignInScreen({ setToken }) {
               secureTextEntry={true}
               style={[styles.inputText, styles.inputText__margin]}
               onChangeText={(text) => setSecondPassword(text)}
+              value={secondPassword}
             />
           </View>
 
