@@ -54,6 +54,12 @@ const styles = {
     color: "red",
     marginTop: 10,
   },
+
+  activityLoad: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 };
 
 export default styles;

@@ -14,6 +14,7 @@ import { useState } from "react";
 
 // ** Dependancies **
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import axios from "axios";
 
 // ** Image **
 import logo from "../assets/airbnb_logo_icon_170605.png";
@@ -66,9 +67,9 @@ export default function SignInScreen({ setToken }) {
         setErrorRequest("We need more element to connect you.");
       }
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response.data.error);
       setRequestLoading(null);
-      setErrorRequest("Email or password is not correct");
+      setErrorRequest(error.response.data.error);
     }
   };
 
@@ -140,7 +141,7 @@ export default function SignInScreen({ setToken }) {
               <ActivityIndicator size={"large"} />
             ) : (
               <TouchableHighlight
-                title="Sign in"
+                title="Sign up"
                 style={styles.button}
                 onPress={requestServer}
               >

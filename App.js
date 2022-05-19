@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+
+// ** Screens **
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
+import SelectOfferScreen from "./containers/SelectOfferScreen";
+import AroundMe from "./containers/AroundMe";
+
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// ** Components **
+import Logo from "./components/Logo";
+import GoBackIcon from "./components/GoBackIcon";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -76,6 +88,7 @@ export default function App() {
                     tabBarInactiveTintColor: "gray",
                   }}
                 >
+                  {/* TAB HOME */}
                   <Tab.Screen
                     name="TabHome"
                     options={{
@@ -91,31 +104,44 @@ export default function App() {
                           name="Home"
                           options={{
                             title: "My App",
-                            headerStyle: { backgroundColor: "red" },
-                            headerTitleStyle: { color: "white" },
+                            headerTitleAlign: "center",
+                            headerStyle: { backgroundColor: "white" },
+                            headerTitle: (props) => <Logo {...props} />,
                           }}
                         >
                           {() => <HomeScreen />}
                         </Stack.Screen>
 
                         <Stack.Screen
-                          name="Profile"
+                          name="SelectOffer"
                           options={{
-                            title: "User Profile",
+                            title: "Select Offer",
+                            headerStyle: { backgroundColor: "white" },
+                            headerTitleAlign: "center",
+                            headerLeft: (props) => {
+                              Platform.OS === "android" ? (
+                                ""
+                              ) : (
+                                <GoBackIcon {...props} />
+                              );
+                            },
+                            headerTitle: (props) => <Logo {...props} />,
                           }}
                         >
-                          {() => <ProfileScreen />}
+                          {(props) => <SelectOfferScreen {...props} />}
                         </Stack.Screen>
                       </Stack.Navigator>
                     )}
                   </Tab.Screen>
+
+                  {/* TAB AROUND ME */}
                   <Tab.Screen
-                    name="TabSettings"
+                    name="AroundMe"
                     options={{
-                      tabBarLabel: "Settings",
+                      tabBarLabel: "Around me",
                       tabBarIcon: ({ color, size }) => (
-                        <Ionicons
-                          name={"ios-options"}
+                        <SimpleLineIcons
+                          name="location-pin"
                           size={size}
                           color={color}
                         />
@@ -124,10 +150,29 @@ export default function App() {
                   >
                     {() => (
                       <Stack.Navigator>
+                        <Stack.Screen name="Around me">
+                          {(props) => <AroundMe {...props} />}
+                        </Stack.Screen>
+                      </Stack.Navigator>
+                    )}
+                  </Tab.Screen>
+
+                  {/* TAB PROFIL */}
+                  <Tab.Screen
+                    name="TabSettings"
+                    options={{
+                      tabBarLabel: "My profil",
+                      tabBarIcon: ({ color, size }) => (
+                        <AntDesign name="user" size={size} color={color} />
+                      ),
+                    }}
+                  >
+                    {() => (
+                      <Stack.Navigator>
                         <Stack.Screen
-                          name="Settings"
+                          name="My profil"
                           options={{
-                            title: "Settings",
+                            title: "My profile",
                           }}
                         >
                           {() => <SettingsScreen setToken={setToken} />}
